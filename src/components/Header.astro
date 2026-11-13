@@ -5,7 +5,7 @@ import { formatDateLong } from '../lib/posts';
 interface Props { variant?: 'full' | 'compact'; active?: string }
 const { variant = 'full', active } = Astro.props;
 const today = formatDateLong(new Date());
-const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com.br').host;
+const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com').host;
 ---
 {variant === 'full' && (
   <div class="util">

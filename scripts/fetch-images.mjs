@@ -7,7 +7,7 @@ import { remoteImageFile } from '../src/lib/remote-image.mjs';
 
 const POSTS = 'src/content/posts';
 const OUT = 'public/uploads/remote';
-const UA = 'BlogDoClezio/1.0 (+https://blogdoclezio.com.br; build de imagens)';
+const UA = 'BlogDoClezio/1.0 (+https://blogdoclezio.com; build de imagens)';
 
 await mkdir(OUT, { recursive: true });
 const files = (await readdir(POSTS)).filter((f) => f.endsWith('.md'));
