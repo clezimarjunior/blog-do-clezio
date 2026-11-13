@@ -6,6 +6,7 @@ chapeu: "Agenda"
 tags: ["Parnamirim", "Space Week Nordeste", "Planetário", "Agenda"]
 autor: "Redação"
 publicado: 2026-11-12T18:00:00-03:00
+destaque: true
 imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Centro_de_Lan%C3%A7amento_da_Barreira_do_Inferno_(7859714092).jpg/1280px-Centro_de_Lan%C3%A7amento_da_Barreira_do_Inferno_(7859714092).jpg"
 legenda: "Foguetes em exposição no Centro de Lançamento da Barreira do Inferno, em Parnamirim. Imagem de arquivo."
 credito: "Rafael Vianna Croffi (CC BY 2.0), via Wikimedia Commons"

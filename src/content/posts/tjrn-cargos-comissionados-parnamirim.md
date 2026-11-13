@@ -10,7 +10,6 @@ imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Parnamirim_RN
 legenda: "Vista de Parnamirim. Imagem ilustrativa."
 credito: "Rodolfo Lucena/Flickr (CC BY 2.0), via Wikimedia Commons"
 creditoUrl: "https://commons.wikimedia.org/wiki/File:Parnamirim_RN_Brasil.jpg"
-destaque: true
 ---
 
 A reforma administrativa da Prefeitura de Parnamirim perdeu parte dos cargos comissionados por decisão do Tribunal de Justiça do Rio Grande do Norte (TJRN), e o tamanho dessa estrutura virou tema de embate entre a gestão da prefeita Nilda Cruz (Solidariedade) e o deputado estadual Coronel Azevedo (PL).
