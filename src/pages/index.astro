@@ -3,27 +3,42 @@ import Base from '../layouts/Base.astro';
 import PostCard from '../components/PostCard.astro';
 import Recentes from '../components/Recentes.astro';
 import Coluna from '../components/Coluna.astro';
+import Carrossel from '../components/Carrossel.astro';
 import Ad from '../components/Ad.astro';
-import { getPosts, postUrl } from '../lib/posts';
+import { getPosts, postUrl, type Post } from '../lib/posts';
 import { SITE } from '../site';
 
 const posts = await getPosts();
 const used = new Set<string>();
-const take = (list: typeof posts, n: number) => {
-  const out = list.filter((p) => !used.has(p.id)).slice(0, n);
+
+// Pega até n matérias para uma seção, nesta ordem:
+// 1) do assunto da seção e ainda não exibidas; 2) do assunto, mesmo já exibidas;
+// 3) qualquer matéria ainda não exibida; 4) qualquer matéria.
+// Assim nenhuma seção fica com buracos, e a repetição diminui conforme o blog cresce.
+function fill(preferred: Post[], n: number): Post[] {
+  const out: Post[] = [];
+  const add = (p: Post) => { if (out.length < n && !out.includes(p)) out.push(p); };
+  preferred.filter((p) => !used.has(p.id)).forEach(add);
+  preferred.forEach(add);
+  posts.filter((p) => !used.has(p.id)).forEach(add);
+  posts.forEach(add);
   out.forEach((p) => used.add(p.id));
   return out;
-};
+}
+const byCat = (...cats: string[]) => posts.filter((p) => cats.includes(p.data.categoria));
+const isServico = (p: Post) => ['servico', 'economia'].includes(p.data.categoria);
+const sobreParnamirim = posts.filter((p) => p.data.categoria === 'parnamirim' || /parnamirim/i.test(p.data.title));
 
 const latest = posts[0];
 const coluna = posts.find((p) => p.data.categoria === 'opiniao');
 if (coluna) used.add(coluna.id);
-const [lead] = take(posts.filter((p) => p.data.destaque).concat(posts), 1);
-const side = take(posts, 3);
-const parnamirim = take(posts.filter((p) => p.data.categoria === 'parnamirim'), 4);
-const politica = take(posts.filter((p) => ['politica', 'rn', 'brasil', 'bastidores'].includes(p.data.categoria)), 4);
-const servico = take(posts.filter((p) => p.data.categoria === 'servico'), 4);
+const [lead] = fill(posts.filter((p) => p.data.destaque), 1);
+const side = fill(posts.filter((p) => !isServico(p)), coluna ? 3 : 4);
+const servico = fill(posts.filter(isServico), 4);
+const parnamirim = fill(sobreParnamirim, 4);
+const politica = fill(byCat('politica', 'rn', 'brasil', 'bastidores'), 5);
 const recentes = posts.slice(0, 5);
+const carrossel = posts.filter((p) => p.id !== lead?.id).slice(0, 10);
 
 const websiteLd = {
   '@context': 'https://schema.org',
@@ -31,6 +46,11 @@ const websiteLd = {
   name: SITE.name,
   url: new URL('/', Astro.site).href,
   inLanguage: 'pt-BR',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: new URL('/busca/?q={q}', Astro.site).href,
+    'query-input': 'required name=q',
+  },
 };
 ---
 <Base header="full" jsonLd={[websiteLd]}>
@@ -60,7 +80,7 @@ const websiteLd = {
     </section>
   )}
 
-  <div class="container pad"><Ad w={970} h={90} label="comércio local de Parnamirim" /></div>
+  <div class="container pad"><Ad w={970} h={90} /></div>
 
   {parnamirim.length > 0 && (
     <section class="container pad">
@@ -75,7 +95,9 @@ const websiteLd = {
         <>
           <div class="section-head" style="margin-bottom:0"><h2>Política</h2><a href="/politica/">Ver tudo →</a></div>
           <PostCard post={politica[0]} variant="row" />
-          {politica.slice(1).map((p) => <PostCard post={p} variant="list" />)}
+          <div class="list-grid">
+            {politica.slice(1).map((p) => <PostCard post={p} variant="list" />)}
+          </div>
         </>
       )}
     </div>
@@ -85,12 +107,17 @@ const websiteLd = {
     </aside>
   </section>
 
+  <Carrossel posts={carrossel} title="Mais notícias" id="mais" />
+
   {servico.length > 0 && (
     <section class="servico">
       <div class="container servico-in">
-        <div>
-          <h2>Serviço Parnamirim</h2>
-          <p>Guias e prazos para quem mora na cidade.</p>
+        <div class="servico-head">
+          <div>
+            <h2>Serviço Parnamirim</h2>
+            <p>Guias, prazos e informações úteis para quem mora na cidade.</p>
+          </div>
+          <a href="/servico/">Ver tudo →</a>
         </div>
         <div class="servico-cards">
           {servico.map((p) => (
@@ -122,17 +149,25 @@ const websiteLd = {
   .vazio h1 { font-family: var(--serif); font-size: 36px; }
 
   .pad { padding-bottom: 48px; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 32px; }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
+  @media (max-width: 1100px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
 
   .two { display: flex; flex-wrap: wrap; gap: 48px; }
   .main-col { flex: 999 1 560px; min-width: 0; }
   .aside-col { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+  .list-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; }
+  @media (max-width: 720px) { .list-grid { grid-template-columns: 1fr; } }
 
   .servico { background: var(--jornal); }
   .servico-in { padding-top: 48px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; }
+  .servico-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .servico-head a { font-size: 14px; font-weight: 700; color: var(--caju-texto); white-space: nowrap; }
   .servico h2 { margin: 0 0 6px; font-family: var(--serif); font-size: 30px; font-weight: 900; letter-spacing: -.02em; }
   .servico p { margin: 0; color: var(--texto-2); }
-  .servico-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .servico-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 1100px) { .servico-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .servico-cards { grid-template-columns: 1fr; } }
   .servico-card { background: #fff; padding: 22px; display: flex; flex-direction: column; gap: 8px; border-top: 4px solid var(--caju); }
   .servico-card .t { font-family: var(--serif); font-size: 21px; font-weight: 800; line-height: 1.2; }
   .servico-card .d { font-size: 14px; color: var(--muted); line-height: 1.5; }

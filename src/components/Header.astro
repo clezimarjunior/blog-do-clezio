@@ -5,7 +5,6 @@ import { formatDateLong } from '../lib/posts';
 interface Props { variant?: 'full' | 'compact'; active?: string }
 const { variant = 'full', active } = Astro.props;
 const today = formatDateLong(new Date());
-const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com').host;
 ---
 {variant === 'full' && (
   <div class="util">
@@ -46,10 +45,9 @@ const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com').host;
       <summary class="icon-btn" aria-label="Buscar">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
       </summary>
-      <form class="drop-panel search" action="https://www.google.com/search" method="get" role="search">
+      <form class="drop-panel search" action="/busca/" method="get" role="search">
         <label for="q" class="visually-hidden">Buscar no blog</label>
         <input id="q" name="q" type="search" placeholder="Buscar no blog" required />
-        <input type="hidden" name="as_sitesearch" value={siteHost} />
         <button class="btn" type="submit">Buscar</button>
       </form>
     </details>
@@ -73,7 +71,10 @@ const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com').host;
   }
   document.querySelectorAll('details.drop').forEach((d) => {
     d.addEventListener('toggle', () => {
-      if (d.open) document.querySelectorAll('details.drop').forEach((o) => { if (o !== d) o.removeAttribute('open'); });
+      if (d.open) {
+        document.querySelectorAll('details.drop').forEach((o) => { if (o !== d) o.removeAttribute('open'); });
+        d.querySelector<HTMLInputElement>('input[type=search]')?.focus();
+      }
     });
   });
 </script>

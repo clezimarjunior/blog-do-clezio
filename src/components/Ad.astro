@@ -1,11 +1,27 @@
 ---
-import { SITE } from '../site';
+// Espaço publicitário. Enquanto não houver anunciante, mostra um anúncio da
+// casa convidando empresas a anunciar.
 interface Props { w: number; h: number; label?: string }
-const { w, h, label } = Astro.props;
+const { w, h } = Astro.props;
+const wide = w >= 600;
 ---
-{!SITE.launched && (
-  <div class="ad">
-    <span>Publicidade</span>
-    <div style={`max-width:${w}px;height:${h}px`}>Anúncio {w} × {h}{label ? ` — ${label}` : ''}</div>
+<aside class:list={['house-ad', { wide }]} style={`max-width:${w}px;min-height:${h}px`} aria-label="Publicidade">
+  <span class="ha-tag">Publicidade</span>
+  <div class="ha-body">
+    <span class="ha-title">{wide ? 'Sua marca para quem acompanha Parnamirim e o RN' : 'Sua marca aqui'}</span>
+    <span class="ha-text">{wide ? 'Anuncie no Blog do Clézio.' : 'Anuncie no Blog do Clézio e fale com o leitor de Parnamirim.'}</span>
   </div>
-)}
+  <a class="ha-btn" href="/anuncie/">Quero anunciar</a>
+</aside>
+
+<style>
+  .house-ad { width: 100%; margin: 0 auto; background: var(--jornal); border-top: 4px solid var(--caju); padding: 18px 22px; display: flex; flex-direction: column; justify-content: center; gap: 12px; position: relative; }
+  .house-ad.wide { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .ha-tag { position: absolute; top: 6px; right: 10px; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: #5B6577; }
+  .ha-body { display: flex; flex-direction: column; gap: 6px; }
+  .ha-title { font-family: var(--serif); font-size: 22px; font-weight: 800; line-height: 1.15; color: var(--tinta); }
+  .ha-text { font-size: 14px; color: var(--texto-2); }
+  .ha-btn { align-self: flex-start; background: var(--tinta); color: #fff; font-size: 14px; font-weight: 700; padding: 10px 16px; border-radius: 2px; }
+  .house-ad.wide .ha-btn { align-self: center; }
+  .ha-btn:hover { color: #fff; background: #0E182C; }
+</style>

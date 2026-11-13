@@ -1,0 +1,61 @@
+---
+import Foto from './Foto.astro';
+import { postUrl, kicker, formatDateShort, type Post } from '../lib/posts';
+interface Props { posts: Post[]; title: string; id?: string }
+const { posts, title, id = 'carrossel' } = Astro.props;
+---
+{posts.length > 0 && (
+  <section class="car container" aria-labelledby={`${id}-t`}>
+    <div class="section-head car-head">
+      <h2 id={`${id}-t`}>{title}</h2>
+      <div class="car-nav">
+        <button type="button" class="car-btn" data-dir="-1" aria-label="Anteriores" aria-controls={`${id}-track`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+        </button>
+        <button type="button" class="car-btn" data-dir="1" aria-label="Próximas" aria-controls={`${id}-track`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </div>
+    <ul class="car-track" id={`${id}-track`}>
+      {posts.map((p) => (
+        <li class="car-item">
+          <a href={postUrl(p)} class="car-card">
+            <Foto src={p.data.imagem} alt="" ratio="4 / 3" />
+            <span class="kicker">{kicker(p)}</span>
+            <span class="car-t">{p.data.title}</span>
+            <span class="meta">{formatDateShort(p.data.publicado)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('.car').forEach((car) => {
+    const track = car.querySelector<HTMLElement>('.car-track');
+    if (!track) return;
+    car.querySelectorAll<HTMLButtonElement>('.car-btn').forEach((b) => {
+      b.addEventListener('click', () => {
+        const dir = Number(b.dataset.dir);
+        track.scrollBy({ left: dir * track.clientWidth * 0.9, behavior: 'smooth' });
+      });
+    });
+  });
+</script>
+
+<style>
+  .car { padding-bottom: 56px; }
+  .car-head { align-items: center; }
+  .car-nav { display: flex; gap: 8px; }
+  .car-btn { width: 44px; height: 44px; border: 1px solid var(--borda); background: #fff; border-radius: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .car-btn:hover { background: var(--nevoa); }
+  .car-btn svg { width: 20px; height: 20px; fill: none; stroke: var(--tinta); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .car-track { list-style: none; margin: 0; padding: 0 0 8px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, calc((100% - 96px) / 4)); gap: 32px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  .car-item { scroll-snap-align: start; }
+  .car-card { display: flex; flex-direction: column; gap: 10px; }
+  .car-t { font-family: var(--serif); font-size: 20px; font-weight: 700; line-height: 1.2; color: var(--tinta); }
+  .car-card:hover .car-t { color: var(--caju-texto); }
+  @media (max-width: 720px) { .car-track { grid-auto-columns: 78%; gap: 16px; } }
+</style>

@@ -88,7 +88,6 @@ const orgLd = {
   <script type="application/ld+json" set:html={JSON.stringify([orgLd, ...jsonLd])} />
 </head>
 <body>
-  {!SITE.launched && <div class="preview-bar">Prévia do Blog do Clézio — site em fase de testes, ainda fora do Google.</div>}
   <Header variant={header} active={active} />
   <main id="conteudo">
     <slot />

@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Busca" description="Busque matérias do Blog do Clézio.">
+  <div class="container busca">
+    <h1>Busca</h1>
+    <form class="busca-form" action="/busca/" method="get" role="search">
+      <label for="busca-q" class="visually-hidden">O que você procura?</label>
+      <input id="busca-q" name="q" type="search" placeholder="Ex.: Câmara, IPTU, escala 5x2" autocomplete="off" />
+      <button class="btn" type="submit">Buscar</button>
+    </form>
+    <p class="busca-status" id="busca-status" aria-live="polite"></p>
+    <ol class="busca-lista" id="busca-lista"></ol>
+  </div>
+</Base>
+
+<script>
+  type Item = { t: string; d: string; u: string; k: string; c: string; g: string[]; i: string | null; p: string; b: string };
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const input = document.getElementById('busca-q') as HTMLInputElement;
+  const status = document.getElementById('busca-status')!;
+  const lista = document.getElementById('busca-lista')!;
+  const params = new URLSearchParams(location.search);
+  const q0 = (params.get('q') ?? '').trim();
+  input.value = q0;
+  if (!q0) input.focus();
+
+  const fmt = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Fortaleza' });
+  let index: Item[] | null = null;
+
+  async function load() {
+    if (index) return index;
+    const r = await fetch('/search.json');
+    index = (await r.json()) as Item[];
+    return index;
+  }
+
+  function render(q: string, items: Item[]) {
+    lista.replaceChildren();
+    if (!q) { status.textContent = 'Digite uma palavra para buscar nas matérias.'; return; }
+    const terms = norm(q).split(/\s+/).filter(Boolean);
+    const scored = items.map((it) => {
+      const title = norm(it.t), lf = norm(it.d), rest = norm([it.k, it.c, it.g.join(' '), it.b].join(' '));
+      let score = 0;
+      for (const t of terms) {
+        if (title.includes(t)) score += 5;
+        else if (lf.includes(t)) score += 3;
+        else if (rest.includes(t)) score += 1;
+        else return { it, score: 0 };
+      }
+      return { it, score };
+    }).filter((x) => x.score > 0).sort((a, b) => b.score - a.score || b.it.p.localeCompare(a.it.p));
+
+    status.textContent = scored.length
+      ? `${scored.length} ${scored.length === 1 ? 'matéria encontrada' : 'matérias encontradas'} para “${q}”.`
+      : `Nenhuma matéria encontrada para “${q}”. Tente outra palavra.`;
+
+    for (const { it } of scored) {
+      const li = document.createElement('li');
+      const a = document.createElement('a'); a.href = it.u; a.className = 'busca-item';
+      if (it.i) { const img = document.createElement('img'); img.src = it.i; img.alt = ''; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; a.append(img); }
+      const box = document.createElement('div');
+      const k = document.createElement('span'); k.className = 'kicker'; k.textContent = it.k;
+      const h = document.createElement('h2'); h.textContent = it.t;
+      const d = document.createElement('p'); d.textContent = it.d;
+      const m = document.createElement('span'); m.className = 'meta'; m.textContent = fmt.format(new Date(it.p));
+      box.append(k, h, d, m); a.append(box); li.append(a); lista.append(li);
+    }
+  }
+
+  load().then((items) => render(q0, items)).catch(() => { status.textContent = 'Não foi possível carregar a busca agora.'; });
+  document.querySelector('.busca-form')!.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    history.replaceState(null, '', q ? `/busca/?q=${encodeURIComponent(q)}` : '/busca/');
+    render(q, await load());
+  });
+</script>
+
+<style>
+  .busca { padding-top: 40px; padding-bottom: 32px; max-width: 900px; }
+  h1 { font-family: var(--serif); font-size: clamp(36px, 4.4vw, 54px); font-weight: 900; letter-spacing: -.025em; margin: 0 0 20px; }
+  .busca-form { display: flex; gap: 10px; }
+  .busca-form input { flex: 1; min-height: 52px; border: 2px solid var(--tinta); padding: 0 16px; font: inherit; font-size: 18px; border-radius: 2px; }
+  .busca-status { color: var(--muted); margin: 18px 0 8px; }
+  .busca-lista { list-style: none; padding: 0; margin: 0; }
+  .busca-lista :global(.busca-item) { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--linha); align-items: flex-start; }
+  .busca-lista :global(.busca-item img) { width: 160px; aspect-ratio: 3 / 2; object-fit: cover; flex-shrink: 0; background: var(--foto); }
+  .busca-lista :global(.busca-item h2) { font-family: var(--serif); font-size: 22px; font-weight: 800; line-height: 1.2; margin: 6px 0; }
+  .busca-lista :global(.busca-item p) { margin: 0 0 6px; color: var(--texto-2); font-size: 15px; }
+  .busca-lista :global(.busca-item:hover h2) { color: var(--caju-texto); }
+  @media (max-width: 560px) { .busca-lista :global(.busca-item img) { width: 96px; } }
+</style>

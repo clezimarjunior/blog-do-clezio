@@ -6,6 +6,7 @@ chapeu: "Coluna do Clézio"
 tags: ["Parnamirim", "Exemplo"]
 publicado: 2026-11-13T00:52:00.000Z
 exemplo: true
+rascunho: true
 ---[Primeiro parágrafo, o lide: o quê, quem, quando, onde e por quê, em até quatro linhas. É o trecho que o Google e o WhatsApp mostram, então traz o fato mais importante logo de cara.]
 
 [Segundo parágrafo: detalha o fato com números, datas e nomes, sempre com a fonte da informação indicada no texto.]
