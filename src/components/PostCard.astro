@@ -13,7 +13,7 @@ const d = post.data;
     <div class="kicker">{kicker(post)}</div>
     <H class="lead-t"><a href={url}>{d.title}</a></H>
     <p class="lead-d">{d.linhaFina}</p>
-    <div class="meta"><strong>Por {d.autor}</strong> · {formatDateShort(d.publicado)}</div>
+    <div class="meta"><strong>{d.autor === 'Redação' ? 'Redação' : `Por ${d.autor}`}</strong> · {formatDateShort(d.publicado)}</div>
   </article>
 )}
 

@@ -23,6 +23,10 @@ const fill = all.filter((p) => p.id !== post.id && !relacionadas.includes(p));
 while (relacionadas.length < 4 && fill.length) relacionadas.push(fill.shift()!);
 const recentes = all.filter((p) => p.id !== post.id).slice(0, 5);
 const shareText = encodeURIComponent(`${d.title} ${url}`);
+const isClezio = d.autor === SITE.author;
+const authorLd = isClezio
+  ? { '@type': 'Person', name: d.autor, url: new URL('/sobre/', Astro.site).href }
+  : { '@type': 'Organization', name: SITE.name, url: new URL('/', Astro.site).href };
 
 const articleLd = {
   '@context': 'https://schema.org',
@@ -36,7 +40,7 @@ const articleLd = {
   mainEntityOfPage: url,
   articleSection: cat.name,
   keywords: d.tags.join(', '),
-  author: [{ '@type': 'Person', name: d.autor, url: new URL('/sobre/', Astro.site).href }],
+  author: [authorLd],
   publisher: { '@type': 'NewsMediaOrganization', name: SITE.name, logo: { '@type': 'ImageObject', url: new URL('/apple-touch-icon.png', Astro.site).href } },
 };
 const breadcrumbLd = {
@@ -60,9 +64,13 @@ const breadcrumbLd = {
       <p class="linha-fina">{d.linhaFina}</p>
       <div class="byline">
         <div class="autor">
-          <img src="/clezio.jpg" alt="" width="48" height="48" />
+          {isClezio
+            ? <img src="/clezio.jpg" alt="" width="48" height="48" />
+            : <span class="autor-mono" aria-hidden="true">C<span></span></span>}
           <div>
-            <a href="/sobre/" class="autor-nome">Por {d.autor}</a>
+            {isClezio
+              ? <a href="/sobre/" class="autor-nome">Por {d.autor}</a>
+              : <span class="autor-nome">Da {d.autor} do Blog do Clézio</span>}
             <div class="meta">
               <time datetime={d.publicado.toISOString()}>{formatDateTime(d.publicado)}</time>
               {d.atualizado && <> · Atualizado em <time datetime={d.atualizado.toISOString()}>{formatDateTime(d.atualizado)}</time></>}
@@ -96,15 +104,17 @@ const breadcrumbLd = {
           </ul>
         )}
 
-        <div class="autor-box">
-          <img src="/clezio.jpg" alt="" width="88" height="88" />
-          <div>
-            <div class="kicker">Sobre o autor</div>
-            <div class="autor-box-nome">{d.autor}</div>
-            <p>Acompanha a política de Parnamirim e do Rio Grande do Norte.</p>
-            <a href="/sobre/">Conheça o Clézio →</a>
+        {isClezio && (
+          <div class="autor-box">
+            <img src="/clezio.jpg" alt="" width="88" height="88" />
+            <div>
+              <div class="kicker">Sobre o autor</div>
+              <div class="autor-box-nome">{d.autor}</div>
+              <p>Acompanha a política de Parnamirim e do Rio Grande do Norte.</p>
+              <a href="/sobre/">Conheça o Clézio →</a>
+            </div>
           </div>
-        </div>
+        )}
 
         <p class="correcao">Encontrou um erro? <a href="/politica-editorial/#correcoes">Envie uma correção</a>. Conheça nossa <a href="/politica-editorial/">política editorial</a>.</p>
       </article>
@@ -146,6 +156,9 @@ const breadcrumbLd = {
   .autor { display: flex; align-items: center; gap: 12px; }
   .autor img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
   .autor-nome { font-size: 15px; font-weight: 700; }
+  .autor-mono { width: 48px; height: 48px; border-radius: 50%; background: var(--tinta); color: #fff; display: inline-flex; align-items: baseline; justify-content: center; padding-top: 6px; font-family: var(--serif); font-size: 30px; font-weight: 900; line-height: 1; flex-shrink: 0; }
+  .autor-mono span { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--caju); margin-left: 1px; }
+  .corpo .tags + .correcao { border-top: 3px double var(--tinta); padding-top: 20px; }
   .share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .share .btn { min-height: 40px; padding: 0 14px; font-size: 13px; }
   .copy { cursor: pointer; width: 40px; padding: 0 !important; }

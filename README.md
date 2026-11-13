@@ -31,7 +31,7 @@ Texto da matéria em Markdown.
 ## Lançamento
 
 Hoje o site está em **modo prévia**: fora do Google (`noindex`), com matérias de exemplo e espaços de anúncio visíveis.
-Para lançar, em `src/site.ts` mude `launched: false` para `launched: true` e apague os arquivos `exemplo-*.md` em `src/content/posts/`.
+Para lançar, em `src/site.ts` mude `launched: false` para `launched: true` e apague o arquivo `exemplo-coluna.md` em `src/content/posts/` (ou troque pela primeira coluna real).
 Depois disso, cadastre o site no Google Search Console e envie `/sitemap-index.xml` e `/news-sitemap.xml`.
 
 Antes de lançar, complete os campos entre colchetes em `src/pages/sobre.astro`, `politica-editorial.astro`, `anuncie.astro` e `privacidade.astro`,
