@@ -1,0 +1,84 @@
+---
+import Foto from './Foto.astro';
+import { postUrl, kicker, formatDateShort, type Post } from '../lib/posts';
+interface Props { post: Post; variant: 'lead' | 'side' | 'grid' | 'row' | 'list'; headingLevel?: 'h1' | 'h2' | 'h3' }
+const { post, variant, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const url = postUrl(post);
+const d = post.data;
+---
+{variant === 'lead' && (
+  <article class="lead">
+    <a href={url} tabindex="-1" aria-hidden="true"><Foto src={d.imagem} alt={d.legenda ?? ''} ratio="16 / 9" eager /></a>
+    <div class="kicker">{kicker(post)}</div>
+    <H class="lead-t"><a href={url}>{d.title}</a></H>
+    <p class="lead-d">{d.linhaFina}</p>
+    <div class="meta"><strong>Por {d.autor}</strong> · {formatDateShort(d.publicado)}</div>
+  </article>
+)}
+
+{variant === 'side' && (
+  <article class="side">
+    <div class="side-txt">
+      <div class="kicker">{kicker(post)}</div>
+      <H class="side-t"><a href={url}>{d.title}</a></H>
+    </div>
+    <a href={url} tabindex="-1" aria-hidden="true" class="side-img"><Foto src={d.imagem} ratio="4 / 3" /></a>
+  </article>
+)}
+
+{variant === 'grid' && (
+  <article class="grid">
+    <a href={url} tabindex="-1" aria-hidden="true"><Foto src={d.imagem} ratio="3 / 2" /></a>
+    <div class="kicker">{kicker(post)}</div>
+    <H class="grid-t"><a href={url}>{d.title}</a></H>
+    <div class="meta">{formatDateShort(d.publicado)}</div>
+  </article>
+)}
+
+{variant === 'row' && (
+  <article class="row">
+    <a href={url} tabindex="-1" aria-hidden="true" class="row-img"><Foto src={d.imagem} ratio="3 / 2" /></a>
+    <div class="row-txt">
+      <div class="kicker">{kicker(post)}</div>
+      <H class="row-t"><a href={url}>{d.title}</a></H>
+      <p class="row-d">{d.linhaFina}</p>
+      <div class="meta">{formatDateShort(d.publicado)}</div>
+    </div>
+  </article>
+)}
+
+{variant === 'list' && (
+  <article class="list">
+    <div class="kicker">{kicker(post)}</div>
+    <H class="list-t"><a href={url}>{d.title}</a></H>
+    <div class="meta">{formatDateShort(d.publicado)}</div>
+  </article>
+)}
+
+<style>
+  h1, h2, h3 { margin: 0; font-family: var(--serif); letter-spacing: -.01em; }
+  .lead { display: flex; flex-direction: column; gap: 16px; }
+  .lead .kicker { font-size: 13px; }
+  .lead-t { font-size: clamp(32px, 4vw, 52px); font-weight: 800; letter-spacing: -.02em; line-height: 1.05; }
+  .lead-d { margin: 0; font-size: 19px; line-height: 1.55; color: var(--texto-2); }
+  .lead .meta strong { color: var(--tinta); }
+
+  .side { display: flex; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--linha); }
+  .side:first-child { padding-top: 0; }
+  .side-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .side-t { font-size: 22px; font-weight: 700; line-height: 1.15; }
+  .side-img { width: 120px; flex-shrink: 0; }
+
+  .grid { display: flex; flex-direction: column; gap: 12px; }
+  .grid-t { font-size: 21px; font-weight: 700; line-height: 1.18; }
+
+  .row { display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--linha); }
+  .row-img { flex: 1 1 280px; }
+  .row-txt { flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px; }
+  .row-t { font-size: 28px; font-weight: 800; line-height: 1.1; }
+  .row-d { margin: 0; font-size: 16px; line-height: 1.55; color: var(--texto-2); }
+
+  .list { display: flex; flex-direction: column; gap: 8px; padding: 22px 0; border-bottom: 1px solid var(--linha); }
+  .list-t { font-size: 23px; font-weight: 700; line-height: 1.15; }
+</style>

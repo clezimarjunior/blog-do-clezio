@@ -1,0 +1,11 @@
+---
+import { SITE } from '../site';
+interface Props { w: number; h: number; label?: string }
+const { w, h, label } = Astro.props;
+---
+{!SITE.launched && (
+  <div class="ad">
+    <span>Publicidade</span>
+    <div style={`max-width:${w}px;height:${h}px`}>Anúncio {w} × {h}{label ? ` — ${label}` : ''}</div>
+  </div>
+)}

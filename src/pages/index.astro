@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import Recentes from '../components/Recentes.astro';
+import Coluna from '../components/Coluna.astro';
+import Ad from '../components/Ad.astro';
+import { getPosts, postUrl } from '../lib/posts';
+import { SITE } from '../site';
+
+const posts = await getPosts();
+const used = new Set<string>();
+const take = (list: typeof posts, n: number) => {
+  const out = list.filter((p) => !used.has(p.id)).slice(0, n);
+  out.forEach((p) => used.add(p.id));
+  return out;
+};
+
+const latest = posts[0];
+const coluna = posts.find((p) => p.data.categoria === 'opiniao');
+if (coluna) used.add(coluna.id);
+const [lead] = take(posts.filter((p) => p.data.destaque).concat(posts), 1);
+const side = take(posts, 3);
+const parnamirim = take(posts.filter((p) => p.data.categoria === 'parnamirim'), 4);
+const politica = take(posts.filter((p) => ['politica', 'rn', 'brasil', 'bastidores'].includes(p.data.categoria)), 4);
+const servico = take(posts.filter((p) => p.data.categoria === 'servico'), 4);
+const recentes = posts.slice(0, 5);
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  url: new URL('/', Astro.site).href,
+  inLanguage: 'pt-BR',
+};
+---
+<Base header="full" jsonLd={[websiteLd]}>
+  {latest && (
+    <div class="container agora">
+      <div class="agora-in">
+        <span class="agora-tag"><span></span>Agora</span>
+        <a href={postUrl(latest)}>{latest.data.title}</a>
+      </div>
+    </div>
+  )}
+
+  {lead && (
+    <section class="container destaques">
+      <h1 class="visually-hidden">Blog do Clézio — notícias de Parnamirim e do RN</h1>
+      <div class="lead-col"><PostCard post={lead} variant="lead" headingLevel="h2" /></div>
+      <div class="side-col">
+        {side.map((p) => <PostCard post={p} variant="side" headingLevel="h2" />)}
+        {coluna && <Coluna post={coluna} />}
+      </div>
+    </section>
+  )}
+
+  {posts.length === 0 && (
+    <section class="container vazio">
+      <h1>Em breve, as primeiras matérias.</h1>
+    </section>
+  )}
+
+  <div class="container pad"><Ad w={970} h={90} label="comércio local de Parnamirim" /></div>
+
+  {parnamirim.length > 0 && (
+    <section class="container pad">
+      <div class="section-head"><h2>Parnamirim</h2><a href="/parnamirim/">Ver tudo →</a></div>
+      <div class="cards">{parnamirim.map((p) => <PostCard post={p} variant="grid" />)}</div>
+    </section>
+  )}
+
+  <section class="container pad two">
+    <div class="main-col">
+      {politica.length > 0 && (
+        <>
+          <div class="section-head" style="margin-bottom:0"><h2>Política</h2><a href="/politica/">Ver tudo →</a></div>
+          <PostCard post={politica[0]} variant="row" />
+          {politica.slice(1).map((p) => <PostCard post={p} variant="list" />)}
+        </>
+      )}
+    </div>
+    <aside class="aside-col">
+      <Recentes posts={recentes} />
+      <Ad w={300} h={250} />
+    </aside>
+  </section>
+
+  {servico.length > 0 && (
+    <section class="servico">
+      <div class="container servico-in">
+        <div>
+          <h2>Serviço Parnamirim</h2>
+          <p>Guias e prazos para quem mora na cidade.</p>
+        </div>
+        <div class="servico-cards">
+          {servico.map((p) => (
+            <a href={postUrl(p)} class="servico-card">
+              <span class="t">{p.data.title}</span>
+              <span class="d">{p.data.linhaFina}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .agora { padding-top: 14px; padding-bottom: 14px; }
+  .agora-in { display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--linha); padding-bottom: 14px; min-width: 0; }
+  .agora-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--caju-botao); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 5px 10px; flex-shrink: 0; }
+  .agora-tag span { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  @media (prefers-reduced-motion: reduce) { .agora-tag span { animation: none; } }
+  .agora-in a { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+  .destaques { display: flex; flex-wrap: wrap; gap: 40px; padding-top: 12px; padding-bottom: 40px; }
+  .lead-col { flex: 999 1 560px; min-width: 0; }
+  .side-col { flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; }
+
+  .vazio { padding: 80px 24px; text-align: center; }
+  .vazio h1 { font-family: var(--serif); font-size: 36px; }
+
+  .pad { padding-bottom: 48px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 32px; }
+
+  .two { display: flex; flex-wrap: wrap; gap: 48px; }
+  .main-col { flex: 999 1 560px; min-width: 0; }
+  .aside-col { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+
+  .servico { background: var(--jornal); }
+  .servico-in { padding-top: 48px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; }
+  .servico h2 { margin: 0 0 6px; font-family: var(--serif); font-size: 30px; font-weight: 900; letter-spacing: -.02em; }
+  .servico p { margin: 0; color: var(--texto-2); }
+  .servico-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .servico-card { background: #fff; padding: 22px; display: flex; flex-direction: column; gap: 8px; border-top: 4px solid var(--caju); }
+  .servico-card .t { font-family: var(--serif); font-size: 21px; font-weight: 800; line-height: 1.2; }
+  .servico-card .d { font-size: 14px; color: var(--muted); line-height: 1.5; }
+</style>

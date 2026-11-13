@@ -1,0 +1,20 @@
+---
+import { postUrl, type Post } from '../lib/posts';
+interface Props { post: Post }
+const { post } = Astro.props;
+---
+<a href={postUrl(post)} class="coluna">
+  <img src="/clezio.jpg" alt="" width="72" height="72" />
+  <div>
+    <div class="k">Coluna do Clézio</div>
+    <div class="t">“{post.data.title}”</div>
+  </div>
+</a>
+
+<style>
+  .coluna { margin-top: 20px; background: var(--tinta); color: #fff; padding: 22px; display: flex; gap: 16px; align-items: center; }
+  .coluna:hover { color: #fff; background: #0E182C; }
+  img { width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--caju); flex-shrink: 0; object-fit: cover; }
+  .k { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--caju-claro); margin-bottom: 6px; }
+  .t { font-family: var(--serif); font-size: 20px; font-weight: 700; font-style: italic; line-height: 1.2; }
+</style>

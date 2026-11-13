@@ -1,0 +1,125 @@
+---
+import Wordmark from './Wordmark.astro';
+import { SITE, CATEGORIES } from '../site';
+import { formatDateLong } from '../lib/posts';
+interface Props { variant?: 'full' | 'compact'; active?: string }
+const { variant = 'full', active } = Astro.props;
+const today = formatDateLong(new Date());
+const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com.br').host;
+---
+{variant === 'full' && (
+  <div class="util">
+    <div class="container util-in">
+      <div class="util-left">
+        <span class="util-date" data-hoje>{today}</span>
+        <span class="util-city">Parnamirim · Rio Grande do Norte</span>
+      </div>
+      <div class="util-right">
+        <a href={SITE.social.instagram}>Instagram</a>
+        <a href={SITE.social.facebook}>Facebook</a>
+        <a href={SITE.social.youtube}>YouTube</a>
+        <a class="util-cta" href={SITE.social.whatsappChannel}>Canal no WhatsApp</a>
+      </div>
+    </div>
+  </div>
+)}
+
+<header class:list={['mast', `mast-${variant}`]}>
+  <div class="container mast-row">
+    <details class="drop">
+      <summary class="icon-btn" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      </summary>
+      <nav class="drop-panel" aria-label="Menu">
+        <a href="/">Início</a>
+        {CATEGORIES.map((c) => <a href={`/${c.slug}/`}>{c.name}</a>)}
+        <hr />
+        <a href="/sobre/">Sobre o Clézio</a>
+        <a href="/politica-editorial/">Política editorial</a>
+        <a href="/anuncie/">Anuncie</a>
+      </nav>
+    </details>
+
+    <a href="/" class="mast-logo" aria-label="Blog do Clézio — página inicial">
+      <Wordmark size={variant === 'full' ? 'xl' : 'md'} />
+    </a>
+
+    <details class="drop drop-right">
+      <summary class="icon-btn" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      </summary>
+      <form class="drop-panel search" action="https://www.google.com/search" method="get" role="search">
+        <label for="q" class="visually-hidden">Buscar no blog</label>
+        <input id="q" name="q" type="search" placeholder="Buscar no blog" required />
+        <input type="hidden" name="as_sitesearch" value={siteHost} />
+        <button class="btn" type="submit">Buscar</button>
+      </form>
+    </details>
+  </div>
+
+  {variant === 'full' && <p class="tagline">{SITE.tagline}</p>}
+
+  <nav class:list={['cats', { 'cats-full': variant === 'full' }]} aria-label="Editorias">
+    <div class="cats-in">
+      {CATEGORIES.map((c) => (
+        <a href={`/${c.slug}/`} class:list={{ on: active === c.slug, opiniao: c.slug === 'opiniao' }} aria-current={active === c.slug ? 'page' : undefined}>{c.name}</a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<script>
+  const el = document.querySelector('[data-hoje]');
+  if (el) {
+    el.textContent = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Fortaleza' }).format(new Date());
+  }
+  document.querySelectorAll('details.drop').forEach((d) => {
+    d.addEventListener('toggle', () => {
+      if (d.open) document.querySelectorAll('details.drop').forEach((o) => { if (o !== d) o.removeAttribute('open'); });
+    });
+  });
+</script>
+
+<style>
+  .util { background: var(--tinta); color: #fff; font-size: 13px; }
+  .util-in { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px; padding-top: 10px; padding-bottom: 10px; }
+  .util-left { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  .util-date { font-weight: 600; }
+  .util-date::first-letter { text-transform: uppercase; }
+  .util-city { color: #C9D1DE; }
+  .util-right { display: flex; align-items: center; gap: 20px; }
+  .util-right a { color: #fff; }
+  .util-cta { background: var(--caju-botao); padding: 6px 12px; font-weight: 700; border-radius: 2px; }
+  .util-cta:hover { background: #A93A13; }
+
+  .mast-full .mast-row { padding-top: 28px; }
+  .mast-compact { border-bottom: 1px solid var(--tinta); }
+  .mast-compact .mast-row { padding-top: 14px; padding-bottom: 14px; }
+  .mast-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .mast-logo:hover { color: inherit; }
+
+  .icon-btn { list-style: none; width: 44px; height: 44px; border: 1px solid var(--borda); background: #fff; border-radius: 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .icon-btn::-webkit-details-marker { display: none; }
+  .icon-btn svg { width: 20px; height: 20px; fill: none; stroke: var(--tinta); stroke-width: 2; stroke-linecap: round; }
+  .drop { position: relative; }
+  .drop-panel { position: absolute; top: 52px; left: 0; z-index: 20; background: #fff; border: 1px solid var(--borda); box-shadow: 0 12px 32px rgba(19,32,58,.12); padding: 12px; display: flex; flex-direction: column; min-width: 240px; }
+  .drop-right .drop-panel { left: auto; right: 0; }
+  .drop-panel a { padding: 10px 12px; font-weight: 600; }
+  .drop-panel hr { border: 0; border-top: 1px solid var(--linha); margin: 8px 0; width: 100%; }
+  .search { flex-direction: row; gap: 8px; min-width: min(420px, 86vw); }
+  .search input[type=search] { flex: 1; min-height: 44px; border: 1px solid var(--borda); padding: 0 12px; font: inherit; border-radius: 2px; }
+
+  .tagline { text-align: center; font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); margin: 0; padding: 14px 24px 18px; }
+
+  .cats { overflow-x: auto; border-top: 1px solid var(--linha); }
+  .cats-full { max-width: var(--max); margin: 0 auto; border-top: 3px double var(--tinta); border-bottom: 1px solid var(--tinta); }
+  .cats-in { display: flex; justify-content: center; gap: 28px; padding: 13px 16px; min-width: max-content; margin: 0 auto; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .cats-full .cats-in { gap: 32px; font-size: 14px; padding: 14px 16px; }
+  .cats a.on, .cats a.opiniao { color: var(--caju-texto); }
+  @media (min-width: 1329px) { .cats-full { margin: 0 auto; } }
+  @media (max-width: 1328px) { .cats-full { margin: 0 24px; } }
+  @media (max-width: 720px) {
+    .cats-in { justify-content: flex-start; }
+    .util-right a:not(.util-cta) { display: none; }
+  }
+</style>

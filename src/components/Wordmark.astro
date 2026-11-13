@@ -1,0 +1,22 @@
+---
+interface Props { size?: 'xl' | 'md' | 'sm'; invert?: boolean; as?: 'div' | 'span' }
+const { size = 'md', invert = false } = Astro.props;
+---
+<span class:list={['wm', `wm-${size}`, { 'wm-invert': invert }]}>
+  <span class="wm-top">Blog do</span>
+  <span class="wm-name">Clézio<span class="wm-dot" aria-hidden="true"></span></span>
+</span>
+
+<style>
+  .wm { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; color: var(--tinta); line-height: 1; }
+  .wm-invert { color: #fff; }
+  .wm-top { font-family: var(--sans); font-weight: 700; letter-spacing: .42em; text-transform: uppercase; padding-left: .25em; }
+  .wm-name { display: inline-flex; align-items: baseline; font-family: var(--serif); font-weight: 900; letter-spacing: -.045em; line-height: .9; }
+  .wm-dot { display: inline-block; width: .2em; height: .2em; border-radius: 50%; background: var(--caju); margin-left: .06em; }
+  .wm-xl .wm-top { font-size: clamp(10px, 1vw, 14px); }
+  .wm-xl .wm-name { font-size: clamp(56px, 8vw, 112px); }
+  .wm-md .wm-top { font-size: 10px; }
+  .wm-md .wm-name { font-size: 44px; }
+  .wm-sm .wm-top { font-size: 8px; }
+  .wm-sm .wm-name { font-size: 32px; }
+</style>

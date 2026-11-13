@@ -1,0 +1,27 @@
+---
+import Base from './Base.astro';
+interface Props { title: string; description: string; kicker?: string }
+const { title, description, kicker } = Astro.props;
+---
+<Base title={title} description={description}>
+  <div class="container">
+    <article class="pagina">
+      {kicker && <div class="kicker">{kicker}</div>}
+      <h1>{title}</h1>
+      <p class="lf">{description}</p>
+      <div class="corpo"><slot /></div>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .pagina { max-width: 720px; padding: 48px 0 24px; }
+  h1 { margin: 12px 0 16px; font-family: var(--serif); font-size: clamp(36px, 4.4vw, 54px); font-weight: 900; letter-spacing: -.025em; line-height: 1.05; }
+  .lf { margin: 0 0 32px; padding-bottom: 24px; border-bottom: 3px double var(--tinta); font-size: 20px; line-height: 1.5; color: var(--texto-2); }
+  .corpo { font-size: 18px; line-height: 1.7; color: var(--texto); }
+  .corpo :global(p) { margin: 0 0 20px; }
+  .corpo :global(h2) { margin: 36px 0 12px; font-family: var(--serif); font-size: 26px; font-weight: 800; color: var(--tinta); scroll-margin-top: 24px; }
+  .corpo :global(ul) { margin: 0 0 20px; padding-left: 22px; }
+  .corpo :global(li) { margin-bottom: 8px; }
+  .corpo :global(a) { color: var(--caju-texto); text-decoration: underline; text-underline-offset: 3px; }
+</style>

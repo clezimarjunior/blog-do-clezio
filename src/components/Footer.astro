@@ -1,0 +1,72 @@
+---
+import Wordmark from './Wordmark.astro';
+import { SITE, CATEGORIES } from '../site';
+const year = new Date().getFullYear();
+---
+<section class="container wa">
+  <div class="wa-box">
+    <div class="wa-text">
+      <h2>As notícias de Parnamirim no seu WhatsApp</h2>
+      <p>Entre no canal e receba as principais matérias do dia. Grátis e sem spam.</p>
+    </div>
+    <a class="btn" href={SITE.social.whatsappChannel}>Entrar no canal</a>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="container foot-in">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <Wordmark size="md" invert />
+        <p>{SITE.tagline}.</p>
+      </div>
+      <div class="foot-cols">
+        <div>
+          <h3>Editorias</h3>
+          {CATEGORIES.filter((c) => c.slug !== 'servico').map((c) => <a href={`/${c.slug}/`}>{c.name}</a>)}
+        </div>
+        <div>
+          <h3>Serviço</h3>
+          <a href="/servico/">Guias e prazos</a>
+          <a href="/feed.xml">RSS</a>
+        </div>
+        <div>
+          <h3>O blog</h3>
+          <a href="/sobre/">Sobre o Clézio</a>
+          <a href="/politica-editorial/">Política editorial</a>
+          <a href="/politica-editorial/#correcoes">Correções</a>
+          <a href="/anuncie/">Anuncie</a>
+          <a href="/privacidade/">Privacidade</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© {year} Blog do Clézio · Parnamirim/RN</span>
+      <span>
+        <a href={SITE.social.instagram}>Instagram</a> ·
+        <a href={SITE.social.facebook}>Facebook</a> ·
+        <a href={SITE.social.youtube}>YouTube</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .wa { padding-top: 56px; padding-bottom: 56px; }
+  .wa-box { border: 1px solid var(--tinta); padding: 36px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
+  .wa-text { flex: 1 1 420px; }
+  .wa h2 { margin: 0 0 8px; font-family: var(--serif); font-size: 32px; font-weight: 900; letter-spacing: -.02em; line-height: 1.1; }
+  .wa p { margin: 0; color: var(--texto-2); }
+  .foot { background: var(--tinta); color: #fff; }
+  .foot-in { padding-top: 56px; padding-bottom: 32px; display: flex; flex-direction: column; gap: 40px; }
+  .foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; }
+  .foot-brand { flex: 1 1 280px; display: flex; flex-direction: column; gap: 14px; }
+  .foot-brand p { margin: 0; font-size: 14px; color: #C9D1DE; max-width: 320px; line-height: 1.6; }
+  .foot-cols { display: flex; flex-wrap: wrap; gap: 56px; }
+  .foot-cols div { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+  .foot-cols h3 { margin: 0 0 4px; font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--caju-claro); }
+  .foot a { color: #fff; }
+  .foot a:hover { color: var(--caju-claro); }
+  .foot-bottom { border-top: 1px solid #2E3D5C; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: #C9D1DE; }
+  .foot-bottom a { color: #C9D1DE; }
+</style>

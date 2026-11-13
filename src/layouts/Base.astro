@@ -1,0 +1,89 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/fraunces/wght-italic.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  header?: 'full' | 'compact';
+  active?: string;
+  jsonLd?: Record<string, unknown>[];
+  publishedTime?: string;
+  modifiedTime?: string;
+}
+
+const {
+  title,
+  description = SITE.tagline,
+  image = '/og-default.png',
+  type = 'website',
+  header = 'compact',
+  active,
+  jsonLd = [],
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} — Notícias de Parnamirim e do RN`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsMediaOrganization',
+  name: SITE.name,
+  url: new URL('/', Astro.site).href,
+  logo: { '@type': 'ImageObject', url: new URL('/apple-touch-icon.png', Astro.site).href },
+  publishingPrinciples: new URL('/politica-editorial/', Astro.site).href,
+  correctionsPolicy: new URL('/politica-editorial/#correcoes', Astro.site).href,
+  areaServed: { '@type': 'City', name: 'Parnamirim', containedInPlace: { '@type': 'State', name: 'Rio Grande do Norte' } },
+};
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {SITE.launched
+    ? <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    : <meta name="robots" content="noindex, nofollow" />}
+  <meta name="theme-color" content="#13203A" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/feed.xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+
+  <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:locale" content={SITE.locale} />
+  <meta property="og:type" content={type} />
+  <meta property="og:title" content={title ?? SITE.name} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+  {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script type="application/ld+json" set:html={JSON.stringify([orgLd, ...jsonLd])} />
+</head>
+<body>
+  {!SITE.launched && <div class="preview-bar">Prévia do Blog do Clézio — as matérias abaixo são exemplos de layout.</div>}
+  <Header variant={header} active={active} />
+  <main id="conteudo">
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>

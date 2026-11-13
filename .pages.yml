@@ -1,0 +1,79 @@
+# Painel de edição do Blog do Clézio (Pages CMS — https://app.pagescms.org)
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  - name: posts
+    label: Matérias
+    type: collection
+    path: src/content/posts
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, categoria, publicado]
+      primary: title
+      sort: [publicado, title]
+      default:
+        sort: publicado
+        order: desc
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+      - name: linhaFina
+        label: Linha fina (resumo que aparece embaixo do título e no Google)
+        type: text
+        required: true
+      - name: categoria
+        label: Editoria
+        type: select
+        required: true
+        options:
+          values:
+            - { value: politica, label: Política }
+            - { value: parnamirim, label: Parnamirim }
+            - { value: rn, label: RN }
+            - { value: brasil, label: Brasil }
+            - { value: economia, label: Economia }
+            - { value: servico, label: Serviço }
+            - { value: bastidores, label: Bastidores }
+            - { value: opiniao, label: Opinião }
+      - name: chapeu
+        label: Chapéu (opcional, ex. "Câmara")
+        type: string
+      - name: tags
+        label: Assuntos
+        type: string
+        list: true
+      - name: autor
+        label: Autor
+        type: string
+        default: Clézio
+      - name: publicado
+        label: Data de publicação
+        type: date
+        required: true
+      - name: atualizado
+        label: Atualizado em (opcional)
+        type: date
+      - name: imagem
+        label: Foto principal
+        type: image
+      - name: legenda
+        label: Legenda da foto
+        type: string
+      - name: credito
+        label: Crédito da foto
+        type: string
+      - name: destaque
+        label: Manchete principal da home
+        type: boolean
+        default: false
+      - name: rascunho
+        label: Rascunho (não publicar ainda)
+        type: boolean
+        default: false
+      - name: body
+        label: Texto
+        type: rich-text

@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Página não encontrada">
+  <div class="container nf">
+    <div class="kicker">Erro 404</div>
+    <h1>Esta página não existe ou mudou de endereço.</h1>
+    <p>Volte para a <a href="/">página inicial</a> ou use a busca no topo da página.</p>
+  </div>
+</Base>
+
+<style>
+  .nf { padding-top: 80px; padding-bottom: 40px; max-width: 760px; }
+  h1 { font-family: var(--serif); font-size: clamp(32px, 4vw, 48px); font-weight: 900; letter-spacing: -.02em; line-height: 1.1; margin: 12px 0 16px; }
+  p { font-size: 18px; color: var(--texto-2); }
+  p a { color: var(--caju-texto); text-decoration: underline; }
+</style>

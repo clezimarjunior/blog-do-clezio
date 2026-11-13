@@ -1,0 +1,41 @@
+---
+import Pagina from '../layouts/Pagina.astro';
+import { SITE } from '../site';
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.author,
+  url: new URL('/sobre/', Astro.site).href,
+  image: new URL('/clezio.jpg', Astro.site).href,
+  homeLocation: { '@type': 'City', name: 'Parnamirim' },
+  worksFor: { '@type': 'NewsMediaOrganization', name: SITE.name },
+};
+---
+<Pagina title="Sobre o Clézio" kicker="Quem escreve" description="Quem está por trás do Blog do Clézio e por que este blog existe.">
+  <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+  <div class="perfil">
+    <img src="/clezio.jpg" alt="Ilustração do Clézio" width="160" height="160" />
+    <p><strong>Clézio</strong> mora em Parnamirim e acompanha a política do Rio Grande do Norte de perto.</p>
+  </div>
+
+  <h2>Trajetória</h2>
+  <p>[Escreva aqui a história do Clézio: de onde é, há quanto tempo acompanha a política potiguar, o que já viu de perto e por que decidiu criar o blog.]</p>
+
+  <h2>O que você encontra aqui</h2>
+  <ul>
+    <li><strong>Política</strong> de Parnamirim, do RN e de Brasília, explicada para quem mora aqui.</li>
+    <li><strong>Bastidores</strong>: o que se comenta antes de virar notícia.</li>
+    <li><strong>Serviço</strong>: concursos, prazos, IPTU, feriados e guias úteis.</li>
+    <li><strong>Opinião</strong>: a coluna do Clézio, sempre identificada como opinião.</li>
+  </ul>
+
+  <h2>Fale com o Clézio</h2>
+  <p>Tem uma informação, uma denúncia ou uma sugestão de pauta? Escreva para [e-mail de contato] ou mande mensagem pelo [WhatsApp do blog].</p>
+</Pagina>
+
+<style>
+  .perfil { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-bottom: 8px; }
+  .perfil img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 3px solid var(--caju); }
+  .perfil p { flex: 1 1 260px; margin: 0 !important; font-size: 20px; }
+</style>

@@ -1,0 +1,188 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Foto from '../../components/Foto.astro';
+import PostCard from '../../components/PostCard.astro';
+import Recentes from '../../components/Recentes.astro';
+import Ad from '../../components/Ad.astro';
+import { getPosts, postUrl, kicker, formatDateTime, type Post } from '../../lib/posts';
+import { SITE, categoryBySlug } from '../../site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { categoria: post.data.categoria, slug: post.id }, props: { post, all: posts } }));
+}
+
+const { post, all } = Astro.props as { post: Post; all: Post[] };
+const d = post.data;
+const { Content } = await render(post);
+const cat = categoryBySlug(d.categoria)!;
+const url = new URL(postUrl(post), Astro.site).href;
+const relacionadas = all.filter((p) => p.id !== post.id && p.data.categoria === d.categoria).slice(0, 4);
+const fill = all.filter((p) => p.id !== post.id && !relacionadas.includes(p));
+while (relacionadas.length < 4 && fill.length) relacionadas.push(fill.shift()!);
+const recentes = all.filter((p) => p.id !== post.id).slice(0, 5);
+const shareText = encodeURIComponent(`${d.title} ${url}`);
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: d.title,
+  description: d.linhaFina,
+  image: [new URL(d.imagem ?? '/og-default.png', Astro.site).href],
+  datePublished: d.publicado.toISOString(),
+  dateModified: (d.atualizado ?? d.publicado).toISOString(),
+  inLanguage: 'pt-BR',
+  mainEntityOfPage: url,
+  articleSection: cat.name,
+  keywords: d.tags.join(', '),
+  author: [{ '@type': 'Person', name: d.autor, url: new URL('/sobre/', Astro.site).href }],
+  publisher: { '@type': 'NewsMediaOrganization', name: SITE.name, logo: { '@type': 'ImageObject', url: new URL('/apple-touch-icon.png', Astro.site).href } },
+};
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Início', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: cat.name, item: new URL(`/${cat.slug}/`, Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: d.title, item: url },
+  ],
+};
+---
+<Base title={d.title} description={d.linhaFina} image={d.imagem} type="article" active={d.categoria} jsonLd={[articleLd, breadcrumbLd]} publishedTime={d.publicado.toISOString()} modifiedTime={d.atualizado?.toISOString()}>
+  <div class="container">
+    <div class="head">
+      <nav aria-label="Você está em" class="crumbs">
+        <a href="/">Início</a><span aria-hidden="true">/</span><a href={`/${cat.slug}/`}>{cat.name}</a>
+      </nav>
+      <div class="kicker">{kicker(post)}</div>
+      <h1>{d.title}</h1>
+      <p class="linha-fina">{d.linhaFina}</p>
+      <div class="byline">
+        <div class="autor">
+          <img src="/clezio.jpg" alt="" width="48" height="48" />
+          <div>
+            <a href="/sobre/" class="autor-nome">Por {d.autor}</a>
+            <div class="meta">
+              <time datetime={d.publicado.toISOString()}>{formatDateTime(d.publicado)}</time>
+              {d.atualizado && <> · Atualizado em <time datetime={d.atualizado.toISOString()}>{formatDateTime(d.atualizado)}</time></>}
+            </div>
+          </div>
+        </div>
+        <div class="share">
+          <span class="meta">Compartilhe</span>
+          <a class="btn" href={`https://wa.me/?text=${shareText}`} target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn-ghost" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener">Facebook</a>
+          <a class="btn btn-ghost" href={`https://x.com/intent/post?text=${shareText}`} target="_blank" rel="noopener">X</a>
+          <button class="btn btn-ghost copy" type="button" data-url={url} aria-label="Copiar link">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <figure class="hero">
+      <Foto src={d.imagem} alt={d.legenda ?? ''} ratio="21 / 9" eager />
+      {(d.legenda || d.credito) && <figcaption>{d.legenda} {d.credito && <strong>Foto: {d.credito}</strong>}</figcaption>}
+    </figure>
+
+    <div class="body-wrap">
+      <article class="corpo">
+        <Content />
+
+        {d.tags.length > 0 && (
+          <ul class="tags" aria-label="Assuntos">
+            {d.tags.map((t) => <li>{t}</li>)}
+          </ul>
+        )}
+
+        <div class="autor-box">
+          <img src="/clezio.jpg" alt="" width="88" height="88" />
+          <div>
+            <div class="kicker">Sobre o autor</div>
+            <div class="autor-box-nome">{d.autor}</div>
+            <p>Acompanha a política de Parnamirim e do Rio Grande do Norte.</p>
+            <a href="/sobre/">Conheça o Clézio →</a>
+          </div>
+        </div>
+
+        <p class="correcao">Encontrou um erro? <a href="/politica-editorial/#correcoes">Envie uma correção</a>. Conheça nossa <a href="/politica-editorial/">política editorial</a>.</p>
+      </article>
+
+      <aside class="lateral">
+        <a href={SITE.social.whatsappChannel} class="wa-card">
+          <span class="t">Receba as notícias de Parnamirim no WhatsApp</span>
+          <span class="btn">Entrar no canal</span>
+        </a>
+        <Recentes posts={recentes} />
+        <Ad w={300} h={600} />
+      </aside>
+    </div>
+
+    {relacionadas.length > 0 && (
+      <section class="rel">
+        <div class="section-head"><h2>Leia também</h2></div>
+        <div class="cards">{relacionadas.map((p) => <PostCard post={p} variant="grid" />)}</div>
+      </section>
+    )}
+  </div>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('button.copy').forEach((b) => {
+    b.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(b.dataset.url ?? location.href); b.setAttribute('aria-label', 'Link copiado'); b.title = 'Link copiado'; } catch {}
+    });
+  });
+</script>
+
+<style>
+  .head { max-width: 880px; display: flex; flex-direction: column; gap: 18px; padding-top: 32px; }
+  .crumbs { display: flex; gap: 8px; font-size: 13px; color: var(--muted); }
+  .head .kicker { font-size: 13px; }
+  h1 { margin: 0; font-family: var(--serif); font-size: clamp(34px, 4.6vw, 58px); font-weight: 800; letter-spacing: -.025em; line-height: 1.04; }
+  .linha-fina { margin: 0; font-size: clamp(18px, 1.8vw, 22px); line-height: 1.5; color: var(--texto-2); }
+  .byline { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); padding: 16px 0; margin-top: 6px; }
+  .autor { display: flex; align-items: center; gap: 12px; }
+  .autor img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+  .autor-nome { font-size: 15px; font-weight: 700; }
+  .share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .share .btn { min-height: 40px; padding: 0 14px; font-size: 13px; }
+  .copy { cursor: pointer; width: 40px; padding: 0 !important; }
+
+  .hero { margin: 32px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  figcaption { font-size: 13px; color: var(--muted); }
+
+  .body-wrap { display: flex; flex-wrap: wrap; gap: 64px; padding: 40px 0 56px; }
+  .corpo { flex: 999 1 560px; min-width: 0; max-width: 720px; font-size: 19px; line-height: 1.7; color: var(--texto); }
+  .corpo :global(p) { margin: 0 0 24px; }
+  .corpo :global(> p:first-child) { font-size: 21px; line-height: 1.6; color: var(--tinta); }
+  .corpo :global(h2) { margin: 36px 0 16px; font-family: var(--serif); font-size: 28px; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; color: var(--tinta); }
+  .corpo :global(h3) { margin: 28px 0 12px; font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--tinta); }
+  .corpo :global(blockquote) { margin: 32px 0; padding: 4px 0 4px 28px; border-left: 4px solid var(--caju); font-family: var(--serif); font-size: 26px; font-style: italic; font-weight: 600; line-height: 1.35; color: var(--tinta); }
+  .corpo :global(blockquote p) { margin: 0 0 10px; }
+  .corpo :global(blockquote p:last-child) { margin: 0; font-family: var(--sans); font-style: normal; font-size: 14px; font-weight: 700; color: var(--muted); }
+  .corpo :global(a) { color: var(--caju-texto); text-decoration: underline; text-underline-offset: 3px; }
+  .corpo :global(ul), .corpo :global(ol) { margin: 0 0 24px; padding-left: 24px; }
+  .corpo :global(li) { margin-bottom: 8px; }
+  .corpo :global(img) { margin: 8px 0 24px; }
+  .corpo :global(strong) { color: var(--tinta); }
+
+  .corpo .tags { list-style: none; padding: 8px 0 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .corpo .tags li { font-size: 13px; font-weight: 600; padding: 7px 12px; border: 1px solid var(--borda); border-radius: 2px; line-height: 1.2; margin: 0; }
+
+  .autor-box { display: flex; gap: 20px; align-items: flex-start; border-top: 3px double var(--tinta); padding-top: 24px; margin-bottom: 24px; }
+  .autor-box img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+  .autor-box-nome { font-family: var(--serif); font-size: 24px; font-weight: 800; line-height: 1.1; margin: 6px 0; }
+  .autor-box p { margin: 0 0 6px !important; font-size: 16px; line-height: 1.55; color: var(--texto-2); }
+  .autor-box a { font-size: 14px; font-weight: 700; color: var(--caju-texto); text-decoration: none !important; }
+  .correcao { font-size: 13px !important; line-height: 1.6; color: var(--muted); }
+
+  .lateral { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+  .wa-card { background: var(--tinta); color: #fff; padding: 24px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .wa-card:hover { color: #fff; }
+  .wa-card .t { font-family: var(--serif); font-size: 22px; font-weight: 800; line-height: 1.2; }
+
+  .rel { padding-bottom: 8px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 32px; }
+</style>

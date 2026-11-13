@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import Recentes from '../../components/Recentes.astro';
+import Ad from '../../components/Ad.astro';
+import { getPosts } from '../../lib/posts';
+import { CATEGORIES } from '../../site';
+
+export function getStaticPaths() {
+  return CATEGORIES.map((c) => ({ params: { categoria: c.slug }, props: { cat: c } }));
+}
+
+const { cat } = Astro.props;
+const all = await getPosts();
+const posts = all.filter((p) => p.data.categoria === cat.slug);
+const [first, ...rest] = posts;
+const recentes = all.filter((p) => p.data.categoria !== cat.slug).slice(0, 5);
+---
+<Base title={`${cat.name} — notícias de Parnamirim e do RN`} description={cat.description} active={cat.slug}>
+  <div class="container">
+    <header class="cat-head">
+      <h1>{cat.name}</h1>
+      <p>{cat.description}</p>
+    </header>
+
+    <div class="two">
+      <div class="main-col">
+        {first ? (
+          <>
+            <PostCard post={first} variant="row" headingLevel="h2" />
+            {rest.map((p) => <PostCard post={p} variant="row" headingLevel="h2" />)}
+          </>
+        ) : (
+          <p class="vazio">Ainda não há matérias nesta editoria.</p>
+        )}
+      </div>
+      <aside class="aside-col">
+        <Recentes posts={recentes} title="Outras editorias" />
+        <Ad w={300} h={250} />
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cat-head { border-bottom: 3px double var(--tinta); padding: 40px 0 24px; margin-bottom: 8px; }
+  h1 { margin: 0 0 8px; font-family: var(--serif); font-size: clamp(40px, 5vw, 64px); font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+  .cat-head p { margin: 0; font-size: 18px; color: var(--texto-2); }
+  .two { display: flex; flex-wrap: wrap; gap: 48px; padding-bottom: 24px; }
+  .main-col { flex: 999 1 560px; min-width: 0; }
+  .aside-col { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 40px; padding-top: 24px; }
+  .vazio { padding: 40px 0; font-size: 18px; color: var(--muted); }
+</style>
