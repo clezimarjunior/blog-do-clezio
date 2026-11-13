@@ -48,6 +48,7 @@ const orgLd = {
   url: new URL('/', Astro.site).href,
   logo: { '@type': 'ImageObject', url: new URL('/apple-touch-icon.png', Astro.site).href },
   publishingPrinciples: new URL('/politica-editorial/', Astro.site).href,
+  sameAs: [SITE.social.instagram, SITE.social.whatsappChannel],
   correctionsPolicy: new URL('/politica-editorial/#correcoes', Astro.site).href,
   areaServed: { '@type': 'City', name: 'Parnamirim', containedInPlace: { '@type': 'State', name: 'Rio Grande do Norte' } },
 };

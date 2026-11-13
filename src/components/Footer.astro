@@ -9,7 +9,7 @@ const year = new Date().getFullYear();
       <h2>As notícias de Parnamirim no seu WhatsApp</h2>
       <p>Entre no canal e receba as principais matérias do dia. Grátis e sem spam.</p>
     </div>
-    <a class="btn" href={SITE.social.whatsappChannel}>Entrar no canal</a>
+    <a class="btn" href={SITE.social.whatsappChannel} target="_blank" rel="noopener">Entrar no canal</a>
   </div>
 </section>
 
@@ -43,9 +43,8 @@ const year = new Date().getFullYear();
     <div class="foot-bottom">
       <span>© {year} Blog do Clézio · Parnamirim/RN</span>
       <span>
-        <a href={SITE.social.instagram}>Instagram</a> ·
-        <a href={SITE.social.facebook}>Facebook</a> ·
-        <a href={SITE.social.youtube}>YouTube</a>
+        <a href={SITE.social.instagram} target="_blank" rel="noopener">Instagram {SITE.social.instagramHandle}</a> ·
+        <a href={SITE.social.whatsappChannel} target="_blank" rel="noopener">Canal no WhatsApp</a>
       </span>
     </div>
   </div>

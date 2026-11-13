@@ -12,10 +12,9 @@ export const SITE = {
   // matérias de exemplo e os espaços de anúncio. No lançamento, mude para true.
   launched: false,
   social: {
-    whatsappChannel: '#',
-    instagram: '#',
-    facebook: '#',
-    youtube: '#',
+    whatsappChannel: 'https://whatsapp.com/channel/0029VbE8AD9JP21DVIasC73K',
+    instagram: 'https://www.instagram.com/blogdoclezio/',
+    instagramHandle: '@blogdoclezio',
   },
 };
 

@@ -15,10 +15,8 @@ const siteHost = new URL(Astro.site ?? 'https://blogdoclezio.com.br').host;
         <span class="util-city">Parnamirim · Rio Grande do Norte</span>
       </div>
       <div class="util-right">
-        <a href={SITE.social.instagram}>Instagram</a>
-        <a href={SITE.social.facebook}>Facebook</a>
-        <a href={SITE.social.youtube}>YouTube</a>
-        <a class="util-cta" href={SITE.social.whatsappChannel}>Canal no WhatsApp</a>
+        <a href={SITE.social.instagram} target="_blank" rel="noopener">Instagram {SITE.social.instagramHandle}</a>
+        <a class="util-cta" href={SITE.social.whatsappChannel} target="_blank" rel="noopener">Canal no WhatsApp</a>
       </div>
     </div>
   </div>
