@@ -6,6 +6,10 @@ chapeu: "Câmara"
 tags: ["Câmara de Parnamirim", "Guarda Municipal", "Segurança pública", "Vereadores"]
 autor: "Redação"
 publicado: 2026-11-10T14:00:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Renault_Duster_Guarda_Municipal.jpg/1280px-Renault_Duster_Guarda_Municipal.jpg"
+legenda: "Viatura da Guarda Municipal de São Gonçalo (RJ). Imagem ilustrativa."
+credito: "SGLeafar (CC BY 4.0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Renault_Duster_Guarda_Municipal.jpg"
 ---
 
 A Guarda Municipal de Parnamirim pode passar a se chamar Polícia Municipal. A mudança está no Projeto de Lei 191/2026, apresentado pelo vereador Thiago Fernandes na sessão ordinária da Câmara Municipal desta terça-feira (10).

@@ -7,6 +7,7 @@ import Recentes from '../../components/Recentes.astro';
 import Ad from '../../components/Ad.astro';
 import { getPosts, postUrl, kicker, formatDateTime, type Post } from '../../lib/posts';
 import { SITE, categoryBySlug } from '../../site';
+import { resolveImage } from '../../lib/remote-image.mjs';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -33,7 +34,7 @@ const articleLd = {
   '@type': 'NewsArticle',
   headline: d.title,
   description: d.linhaFina,
-  image: [new URL(d.imagem ?? '/og-default.png', Astro.site).href],
+  image: [new URL(resolveImage(d.imagem) ?? '/og-default.png', Astro.site).href],
   datePublished: d.publicado.toISOString(),
   dateModified: (d.atualizado ?? d.publicado).toISOString(),
   inLanguage: 'pt-BR',
@@ -91,7 +92,14 @@ const breadcrumbLd = {
 
     <figure class="hero">
       <Foto src={d.imagem} alt={d.legenda ?? ''} ratio="21 / 9" eager />
-      {(d.legenda || d.credito) && <figcaption>{d.legenda} {d.credito && <strong>Foto: {d.credito}</strong>}</figcaption>}
+      {(d.legenda || d.credito) && (
+        <figcaption>
+          {d.legenda}{' '}
+          {d.credito && (d.creditoUrl
+            ? <a href={d.creditoUrl} target="_blank" rel="noopener"><strong>Foto: {d.credito}</strong></a>
+            : <strong>Foto: {d.credito}</strong>)}
+        </figcaption>
+      )}
     </figure>
 
     <div class="body-wrap">

@@ -6,6 +6,10 @@ chapeu: "Câmara"
 tags: ["Câmara de Parnamirim", "Transparência", "TCE-RN"]
 autor: "Redação"
 publicado: 2026-11-11T10:00:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Nova_Parnamirim,_Rio_Grande_do_Norte,_Brasil.jpg/1280px-Nova_Parnamirim,_Rio_Grande_do_Norte,_Brasil.jpg"
+legenda: "Vista de Nova Parnamirim. Imagem ilustrativa."
+credito: "Rodolfo Lucena/Flickr (CC BY 2.0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Nova_Parnamirim,_Rio_Grande_do_Norte,_Brasil.jpg"
 ---
 
 A Câmara Municipal de Parnamirim recebeu o Selo Diamante de transparência pública de 2026, concedido pela Associação dos Membros dos Tribunais de Contas do Brasil (Atricon), por meio do Tribunal de Contas do Estado do Rio Grande do Norte (TCE-RN).

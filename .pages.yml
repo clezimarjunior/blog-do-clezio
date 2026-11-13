@@ -64,7 +64,10 @@ content:
         label: Legenda da foto
         type: string
       - name: credito
-        label: Crédito da foto
+        label: Crédito da foto (autor e licença)
+        type: string
+      - name: creditoUrl
+        label: Link da fonte da foto (opcional)
         type: string
       - name: destaque
         label: Manchete principal da home

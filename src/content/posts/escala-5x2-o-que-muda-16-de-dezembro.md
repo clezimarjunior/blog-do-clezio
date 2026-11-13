@@ -6,6 +6,10 @@ chapeu: "Trabalho"
 tags: ["Escala 5x2", "Fim da escala 6x1", "STF", "Direitos trabalhistas"]
 autor: "Redação"
 publicado: 2026-11-13T08:00:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Carteiradetrabalho.jpg/1280px-Carteiradetrabalho.jpg"
+legenda: "Carteira de Trabalho. Imagem de arquivo."
+credito: "Marcello Casal Jr/Agência Brasil (CC BY 3.0 BR), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Carteiradetrabalho.jpg"
 ---
 
 O fim da escala 6x1 continua com data marcada: a partir de 16 de dezembro de 2026, a jornada máxima cai de 44 para 42 horas semanais, com dois dias de descanso remunerado. A data foi mantida pelo ministro Flávio Dino, do Supremo Tribunal Federal (STF), em decisão provisória (liminar) desta quinta-feira (12).

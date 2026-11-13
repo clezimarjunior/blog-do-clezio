@@ -19,6 +19,7 @@ const posts = defineCollection({
     imagem: z.string().optional(),
     legenda: z.string().optional(),
     credito: z.string().optional(),
+    creditoUrl: z.string().url().optional(),
     destaque: z.boolean().default(false),
     rascunho: z.boolean().default(false),
     exemplo: z.boolean().default(false),

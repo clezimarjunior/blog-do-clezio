@@ -6,6 +6,10 @@ chapeu: "Congresso"
 tags: ["Senado", "Ajuste fiscal", "Orçamento 2027", "Lei Kandir"]
 autor: "Redação"
 publicado: 2026-11-13T07:30:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Pal%C3%A1cio_do_Congresso_Nacional_(48205178252).jpg/1280px-Pal%C3%A1cio_do_Congresso_Nacional_(48205178252).jpg"
+legenda: "Palácio do Congresso Nacional, em Brasília. Imagem de arquivo."
+credito: "Leonardo Sá/Agência Senado (CC BY 2.0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Pal%C3%A1cio_do_Congresso_Nacional_(48205178252).jpg"
 ---
 
 O plenário do Senado aprovou na noite desta quinta-feira (12), por 45 votos a 31, o texto principal do projeto de ajuste fiscal do governo federal, o PLP 299/2026. Quatro destaques, que podem mudar pontos do texto, serão votados na terça-feira (17). Depois disso, a proposta segue para a Câmara dos Deputados.

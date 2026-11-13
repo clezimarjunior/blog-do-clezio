@@ -6,6 +6,10 @@ chapeu: "Agenda"
 tags: ["Parnamirim", "Space Week Nordeste", "Planetário", "Agenda"]
 autor: "Redação"
 publicado: 2026-11-12T18:00:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Centro_de_Lan%C3%A7amento_da_Barreira_do_Inferno_(7859714092).jpg/1280px-Centro_de_Lan%C3%A7amento_da_Barreira_do_Inferno_(7859714092).jpg"
+legenda: "Foguetes em exposição no Centro de Lançamento da Barreira do Inferno, em Parnamirim. Imagem de arquivo."
+credito: "Rafael Vianna Croffi (CC BY 2.0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Centro_de_Lan%C3%A7amento_da_Barreira_do_Inferno_(7859714092).jpg"
 ---
 
 Parnamirim recebe neste sábado (14) e domingo (15) a programação aberta ao público do Space Week Nordeste 2026, evento dedicado à exploração espacial. As atividades acontecem no Parque Aluízio Alves, onde fica o Planetário Municipal, das 15h às 21h nos dois dias.

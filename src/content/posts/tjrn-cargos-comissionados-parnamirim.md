@@ -6,6 +6,10 @@ chapeu: "Prefeitura"
 tags: ["Prefeitura de Parnamirim", "TJRN", "Cargos comissionados", "Eleições 2028"]
 autor: "Redação"
 publicado: 2026-11-13T09:00:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Parnamirim_RN_Brasil.jpg/1280px-Parnamirim_RN_Brasil.jpg"
+legenda: "Vista de Parnamirim. Imagem ilustrativa."
+credito: "Rodolfo Lucena/Flickr (CC BY 2.0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Parnamirim_RN_Brasil.jpg"
 destaque: true
 ---
 

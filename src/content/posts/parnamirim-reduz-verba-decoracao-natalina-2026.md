@@ -6,6 +6,10 @@ chapeu: "Prefeitura"
 tags: ["Prefeitura de Parnamirim", "Natal 2026", "Contas públicas", "Femurn"]
 autor: "Redação"
 publicado: 2026-11-13T11:30:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Christmas_decoration_at_Portugal_Square_in_Fortaleza.jpg/1280px-Christmas_decoration_at_Portugal_Square_in_Fortaleza.jpg"
+legenda: "Decoração de Natal na Praça Portugal, em Fortaleza (CE). Imagem ilustrativa."
+credito: "Otávio Nogueira (CC BY 2.0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Christmas_decoration_at_Portugal_Square_in_Fortaleza.jpg"
 ---
 
 A Prefeitura de Parnamirim vai gastar menos com a iluminação e a decoração de Natal deste ano. O valor previsto foi reduzido em R$ 777.508,35 e ficou em R$ 2.272.500,00.

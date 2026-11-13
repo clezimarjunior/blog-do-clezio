@@ -6,6 +6,10 @@ chapeu: "Governo do RN"
 tags: ["Cadu Xavier", "Fátima Bezerra", "Transição", "Governo do RN"]
 autor: "Redação"
 publicado: 2026-11-12T16:00:00-03:00
+imagem: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Centro_Administrativo_do_Estado,_Natal_(RN).jpg/1280px-Centro_Administrativo_do_Estado,_Natal_(RN).jpg"
+legenda: "Entrada do Centro Administrativo do Estado, em Natal, onde funciona o gabinete de transição."
+credito: "Marquinhos (CC0), via Wikimedia Commons"
+creditoUrl: "https://commons.wikimedia.org/wiki/File:Centro_Administrativo_do_Estado,_Natal_(RN).jpg"
 ---
 
 A equipe de transição do governador eleito do Rio Grande do Norte, Cadu Xavier (PT), conhecido como Cadu de Lula, tem até 18 de novembro para concluir o diagnóstico da administração estadual, antes da diplomação dos eleitos. A informação é da coordenadora dos trabalhos, Luciana Daltro, controladora-geral do Estado.

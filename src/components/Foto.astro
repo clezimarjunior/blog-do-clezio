@@ -1,10 +1,12 @@
 ---
+import { resolveImage } from '../lib/remote-image.mjs';
 interface Props { src?: string; alt?: string; ratio?: string; class?: string; eager?: boolean }
-const { src, alt = '', ratio = '3 / 2', class: cls, eager = false } = Astro.props;
+const { src: raw, alt = '', ratio = '3 / 2', class: cls, eager = false } = Astro.props;
+const src = resolveImage(raw);
 ---
 {src ? (
   <div class:list={['foto', cls]} style={`aspect-ratio: ${ratio}`}>
-    <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+    <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} referrerpolicy="no-referrer" />
   </div>
 ) : (
   <div class:list={['foto', 'foto-vazia', cls]} style={`aspect-ratio: ${ratio}`} aria-hidden="true">
