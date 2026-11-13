@@ -7,7 +7,7 @@ const personLd = {
   '@type': 'Person',
   name: SITE.author,
   url: new URL('/sobre/', Astro.site).href,
-  image: new URL('/clezio.jpg', Astro.site).href,
+  image: new URL('/clezio-foto.jpg', Astro.site).href,
   homeLocation: { '@type': 'City', name: 'Parnamirim' },
   worksFor: { '@type': 'NewsMediaOrganization', name: SITE.name },
 };
@@ -15,7 +15,7 @@ const personLd = {
 <Pagina title="Sobre o Clézio" kicker="Quem escreve" description="Quem está por trás do Blog do Clézio e por que este blog existe.">
   <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
   <div class="perfil">
-    <img src="/clezio.jpg" alt="Ilustração do Clézio" width="160" height="160" />
+    <img src="/clezio-foto.jpg" alt="Foto do Clézio" width="160" height="160" />
     <p><strong>Clézio</strong> mora em Parnamirim e acompanha a política do Rio Grande do Norte de perto.</p>
   </div>
 
